@@ -1,8 +1,7 @@
 export class UpdateRegistroDiarioDto {
-  fecha?: string;
   totalVentas?: number;
+  descripcionVentas?: string;
   totalGastos?: number;
+  descripcionGastos?: string;
   observacion?: string;
-  agenteId?: number;
-  Gastoid?: number;
 }
