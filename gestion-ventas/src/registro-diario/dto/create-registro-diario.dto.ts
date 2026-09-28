@@ -29,10 +29,8 @@ export class CreateRegistroDiarioDto {
   @IsNotEmpty()
   observacion: string;
 
-  @IsNumber()
-  @IsNotEmpty()
   @IsOptional()
   @IsInt()
   @Min(1)
-  id_agente: number;
+  id_agente?: number;
 }

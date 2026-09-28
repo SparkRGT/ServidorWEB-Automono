@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { AgenteService } from '../usuario/agente/agente.service.js';
 import { CreateRegistroDiarioDto } from './dto/create-registro-diario.dto.js';
 import { UpdateRegistroDiarioDto } from './dto/update-registro-diario.dto.js';
 
@@ -18,9 +19,36 @@ export class RegistroDiarioService {
   private readonly registrosDiarios: RegistroDiario[] = [];
   private nextId = 1;
 
+  constructor(private readonly agenteService: AgenteService) {}
+
+  createForAgent(idAgente: number, dto: CreateRegistroDiarioDto): RegistroDiario {
+    this.agenteService.findOne(idAgente);
+    return this.create({ ...dto, id_agente: idAgente });
+  }
+
+  findByAgentOrThrow(idAgente: number): RegistroDiario[] {
+    this.agenteService.findOne(idAgente);
+    return this.findByAgent(idAgente);
+  }
+
+  updateOwn(
+    idAgente: number,
+    idRegistro: number,
+    dto: UpdateRegistroDiarioDto,
+  ): RegistroDiario {
+    this.agenteService.findOne(idAgente);
+    const registro = this.findOne(idRegistro);
+    if (registro.id_agente !== idAgente) {
+      throw new NotFoundException(
+        `Registro diario ${idRegistro} no pertenece al agente`,
+      );
+    }
+    return this.update(idRegistro, dto);
+  }
+
   create(dto: CreateRegistroDiarioDto): RegistroDiario {
-    if (dto.id_agente === undefined) {
-      throw new Error('El registro diario requiere un agente');
+    if (dto.id_agente == null) {
+      throw new BadRequestException('El registro diario requiere un agente');
     }
 
     const registro: RegistroDiario = {
@@ -81,6 +109,11 @@ export class RegistroDiarioService {
     id: number,
     dto: CreateRegistroDiarioDto,
   ): RegistroDiario {
+    if (dto.id_agente == null) {
+      throw new BadRequestException('El registro requiere un agente');
+    }
+    this.agenteService.findOne(dto.id_agente);
+
     const registro = this.findOne(id);
     registro.fecha = new Date(dto.fecha);
     registro.totalVentas = dto.totalVentas;
