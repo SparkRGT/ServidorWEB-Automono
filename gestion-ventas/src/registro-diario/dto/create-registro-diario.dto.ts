@@ -1,5 +1,5 @@
 
-import { IsDateString, IsInt, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateRegistroDiarioDto {
 
@@ -31,6 +31,7 @@ export class CreateRegistroDiarioDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @IsOptional()
   @IsInt()
   @Min(1)
   id_agente: number;

@@ -19,6 +19,10 @@ export class RegistroDiarioService {
   private nextId = 1;
 
   create(dto: CreateRegistroDiarioDto): RegistroDiario {
+    if (dto.id_agente === undefined) {
+      throw new Error('El registro diario requiere un agente');
+    }
+
     const registro: RegistroDiario = {
       id_registroDiario: this.nextId++,
       fecha: new Date(dto.fecha),

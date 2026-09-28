@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
-import { CreateRegistroDiarioDto } from '../../registro-diario/dto/create-registro-diario.dto.js';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { CreateAgenteDto } from '../agente/dto/create-agente.dto.js';
 import { SupervisorService } from './supervisor.service.js';
 
@@ -22,21 +21,4 @@ export class SupervisorController {
     return this.supervisorService.removeAgente(id);
   }
 
-  @Get('registros')
-  findRegistros() {
-    return this.supervisorService.findRegistros();
-  }
-
-  @Patch('registros/:id')
-  updateRegistro(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateRegistroDiarioDto,
-  ) {
-    return this.supervisorService.updateRegistro(id, dto);
-  }
-
-  @Delete('registros/:id')
-  removeRegistro(@Param('id', ParseIntPipe) id: number) {
-    return this.supervisorService.removeRegistro(id);
-  }
 }
